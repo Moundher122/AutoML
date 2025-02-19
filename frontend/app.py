@@ -1,27 +1,50 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-class element:
-    def __init__(self,data):
-        self.data=data
-    def predict(self):
-        with st.container():
-         st.write('****')
-         st.write("**predictname**")
-    def accuracy(self):
-        with st.container():
-         st.write('****')
-         st.write("**0.95**")
-    def download(self):
-       st.write('****')
-       st.button("📥",key=2)
-class data:
-    def __init__(self,name,accuracy,link):
-        self.name=name
-        self.accuracy=accuracy
-        self.link=link
-page = st.sidebar.radio("", [ "Models","New Model", "Profile"])
-if page == "New Model":
+from widgets import element
+from classes import data
+import streamlit as st
+
+import streamlit as st
+
+# Hardcoded users (Replace with a database later)
+USERS = {
+    "moundher@gmail.com": "123",
+    "user@example.com": "mypassword"
+}
+
+# Initialize session state
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# Login function
+def login(email, password):
+    if email in USERS and USERS[email] == password:
+        st.session_state.authenticated = True
+        st.session_state.user = email
+        st.success("Login successful! 🎉")
+        st.rerun()
+    else:
+        st.error("Invalid email or password.")
+
+def logout():
+    st.session_state.authenticated = False
+    st.rerun()
+
+if not st.session_state.authenticated:
+    st.title("Login")
+
+    with st.form("login_form"):
+        email = st.text_input("Email")
+        password = st.text_input("Password", type="password")
+        login_button = st.form_submit_button("Login")
+
+    if login_button:
+        login(email, password)
+
+else:
+ page = st.sidebar.radio("", [ "Models","New Model", "Profile"])
+ if page == "New Model":
     st.header("📈 Create a new model")
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
     if uploaded_file is not None:
@@ -34,7 +57,7 @@ if page == "New Model":
     if st.button('Create Model'):
        page = "Models"
        st.rerun()
-if page == "Models":
+ if page == "Models":
    mo=data("moundher","0.90","link")
    wid=element(mo)
    st.header("Your models")
@@ -51,12 +74,14 @@ if page == "Models":
      with st.container():
         st.markdown("### Download")
         wid.download()
-if page == "Profile":
+ if page == "Profile":
     st.header("👤 Profile")
-    st.markdown(f"**Name:** Moundher")
-    st.write("**Email**:email")
+    st.markdown(f"**Email:** {st.session_state.user}")
     if st.button("🚪 Logout"):
-       pass
+       logout()  
+
+
+
 
 
 
