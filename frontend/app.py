@@ -51,7 +51,12 @@ if page == "Models":
      with st.container():
         st.markdown("### Download")
         wid.download()
-
+if page == "Profile":
+    st.header("👤 Profile")
+    st.markdown(f"**Name:** Moundher")
+    st.write("**Email**:email")
+    if st.button("🚪 Logout"):
+       pass
 
 
 
